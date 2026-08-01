@@ -446,11 +446,13 @@ body {
   border-right: 1px solid var(--border);
 }
 
-/* minmax(0, …) rather than a bare 1fr: a grid track's automatic minimum is
- * its content's min-content width, so a single long unbreakable run inside
- * the stats panel pushed the column past the viewport (measured 407px inside
- * a 398px frame) and the whole page scrolled sideways. */
-:root[data-layout="mobile"] .dashboard-grid { grid-template-columns: minmax(0, 1fr); }
+/* <body> becomes the ordering context and the two-column grid is dissolved,
+ * so the stats panel, the detail panel and the chart can all be placed ahead
+ * of the viewport column. `.dashboard-grid` is the one wrapper here that is
+ * safe to dissolve — it contributes only the grid and the centring, no
+ * background, border or padding that would vanish with it. */
+:root[data-layout="mobile"] body { display: flex; flex-direction: column; }
+:root[data-layout="mobile"] .dashboard-grid { display: contents; }
 
 :root[data-layout="mobile"] .center-panel { position: relative; }
 
@@ -492,6 +494,31 @@ body {
  * two columns aligned on desktop. */
 :root[data-layout="mobile"] .body-scene-substats__col:not(#bodytype-explorer) { display: none; }
 
+/* 🔑 Every top-level section carries `margin-inline: auto` from the desktop
+ * max-width rule, and an auto margin on a flex item cancels `stretch`: the
+ * section collapses to its content width and floats in the middle of the
+ * column. The timeline measured 262px inside a 398px frame, inset 69px from
+ * the left. This is also what wrecked an earlier attempt at this layout —
+ * every band shrank at once, which read as "the whole page fell apart"
+ * rather than as one margin bug. Clear the margins wherever a section
+ * becomes a flex item. */
+:root[data-layout="mobile"] body > *,
+:root[data-layout="mobile"] .side-panel--left,
+:root[data-layout="mobile"] .center-panel,
+/* Named explicitly: layoutMode.js moves these two into .center-panel, so they
+ * are no longer children of <body> and `body > *` does not reach them. */
+:root[data-layout="mobile"] .timeline-section,
+:root[data-layout="mobile"] .sliders-section {
+  margin-left: 0;
+  margin-right: 0;
+  width: 100%;
+  min-width: 0;
+}
+
+/* Trimmed so the track reaches the frame edge; 10px is what keeps the round
+ * handles, which are centred on the track's ends, from clipping. */
+:root[data-layout="mobile"] .timeline-section { padding: 12px 10px; }
+
 /* A flex item's automatic minimum is its content's min-content width, and the
  * three projection checkboxes sit in a nowrap row — together they held the
  * whole section at 443px inside a 398px frame and scrolled the page sideways.
@@ -500,11 +527,14 @@ body {
 :root[data-layout="mobile"] .projection-toggle-row,
 :root[data-layout="mobile"] .projection-period-row { flex-wrap: wrap; }
 
-/* The stats panel is reading material, and it is tall (measured 855px). As
- * the first grid item it stood between the reader and the figures; the two
- * grid items are simply swapped rather than dissolving the grid. */
-:root[data-layout="mobile"] .center-panel { order: 1; }
-:root[data-layout="mobile"] .side-panel--left { order: 2; }
+/* All the reading material — stats, the collapsed detail panel, the trend
+ * chart — sits above the interactive column. */
+:root[data-layout="mobile"] .app-header { order: 1; }
+:root[data-layout="mobile"] #app-error { order: 2; }
+:root[data-layout="mobile"] .side-panel--left { order: 3; }
+:root[data-layout="mobile"] .detail-section { order: 4; }
+:root[data-layout="mobile"] .chart-section { order: 5; }
+:root[data-layout="mobile"] .center-panel { order: 6; }
 
 /* Every stat is a label above its value on desktop, which down a single
  * column turns the panel into a long ladder of half-empty lines. Here the
