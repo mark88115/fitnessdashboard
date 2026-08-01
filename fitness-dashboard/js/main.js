@@ -10,8 +10,13 @@ import { setupDetailPanel } from './detailPanel.js';
 import { setupReferencePanel } from './referencePanel.js';
 import { renderTrendChart } from './trendChart.js';
 import { setupUserSelect } from './userSelect.js';
+import { setupLayoutToggle } from './layoutMode.js';
 
 const el = (id) => document.getElementById(id);
+
+// Before anything measures itself: the 3D viewports size their canvases from
+// their container, so the layout has to be settled first.
+setupLayoutToggle(el('layout-toggle'));
 
 const bodyScene = new BodyScene(el('body-scene-data'), el('body-scene-gallery'));
 let bodySceneLoaded = false;

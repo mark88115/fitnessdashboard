@@ -397,8 +397,32 @@ body {
 
 .tooltip__date { color: var(--text-dim); margin-bottom: 4px; }
 
+/* 電腦版 / 手機版 switch, in the header beside the user picker. */
+.layout-toggle { display: inline-flex; margin-right: 10px; }
+.layout-toggle__btn {
+  background: var(--panel-bg);
+  color: var(--text-dim);
+  border: 1px solid var(--border);
+  font-size: 14px;
+  padding: 4px 10px;
+  cursor: pointer;
+}
+.layout-toggle__btn:first-child { border-radius: 4px 0 0 4px; }
+.layout-toggle__btn:last-child { border-radius: 0 4px 4px 0; border-left: none; }
+.layout-toggle__btn[aria-pressed="true"] {
+  background: var(--text);
+  color: var(--panel-bg);
+  border-color: var(--text);
+}
+
 /* Phone layout: the two viewports stack instead of sitting side by side —
  * at 375px wide they were 212px each, too narrow to read a figure in.
+ *
+ * Keyed off `<html data-layout>` (set in layoutMode.js from the screen width,
+ * or pinned by the header switch) rather than off `@media (max-width: 720px)`
+ * directly, so the phone layout can be looked at on a desktop screen. A
+ * *pinned* phone layout is also framed to phone width, since a full-width
+ * window would otherwise show a stacked layout at 1400px and prove nothing.
  *
  * `display: contents` dissolves the three wrapper rows so each viewport's
  * title / canvas / substats can be interleaved into one column via `order`,
@@ -412,31 +436,40 @@ body {
  * auto, the canvas fell back to its attribute height, and the
  * ResizeObserver → setSize → taller canvas → observer loop ran away
  * (measured: 1857px tall). */
-@media (max-width: 720px) {
-  .dashboard-grid { grid-template-columns: 1fr; }
-
-  .center-panel { position: relative; }
-
-  .body-scene-titles,
-  .body-scene-row,
-  .body-scene-substats { display: contents; }
-
-  .body-scene-titles__col,
-  .body-scene-substats__col { flex: none; }
-
-  .body-scene {
-    flex: none;
-    height: 42vh;
-    min-height: 280px;
-  }
-
-  .body-scene-titles__col:nth-child(1) { order: 1; }
-  #body-scene-data { order: 2; }
-  .body-scene-titles__col:nth-child(2) { order: 3; }
-  #body-scene-gallery { order: 4; }
-  #bodytype-explorer { order: 5; }
-
-  /* The left viewport's substats column is empty — it only exists to keep
-   * the two columns aligned on desktop. */
-  .body-scene-substats__col:not(#bodytype-explorer) { display: none; }
+:root[data-layout="mobile"][data-layout-pinned="true"] body {
+  max-width: 400px;
+  margin: 0 auto;
+  border-left: 1px solid var(--border);
+  border-right: 1px solid var(--border);
 }
+
+/* minmax(0, …) rather than a bare 1fr: a grid track's automatic minimum is
+ * its content's min-content width, so a single long unbreakable run inside
+ * the stats panel pushed the column past the viewport (measured 407px inside
+ * a 398px frame) and the whole page scrolled sideways. */
+:root[data-layout="mobile"] .dashboard-grid { grid-template-columns: minmax(0, 1fr); }
+
+:root[data-layout="mobile"] .center-panel { position: relative; }
+
+:root[data-layout="mobile"] .body-scene-titles,
+:root[data-layout="mobile"] .body-scene-row,
+:root[data-layout="mobile"] .body-scene-substats { display: contents; }
+
+:root[data-layout="mobile"] .body-scene-titles__col,
+:root[data-layout="mobile"] .body-scene-substats__col { flex: none; }
+
+:root[data-layout="mobile"] .body-scene {
+  flex: none;
+  height: 42vh;
+  min-height: 280px;
+}
+
+:root[data-layout="mobile"] .body-scene-titles__col:nth-child(1) { order: 1; }
+:root[data-layout="mobile"] #body-scene-data { order: 2; }
+:root[data-layout="mobile"] .body-scene-titles__col:nth-child(2) { order: 3; }
+:root[data-layout="mobile"] #body-scene-gallery { order: 4; }
+:root[data-layout="mobile"] #bodytype-explorer { order: 5; }
+
+/* The left viewport's substats column is empty — it only exists to keep the
+ * two columns aligned on desktop. */
+:root[data-layout="mobile"] .body-scene-substats__col:not(#bodytype-explorer) { display: none; }
