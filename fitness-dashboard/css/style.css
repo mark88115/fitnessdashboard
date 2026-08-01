@@ -397,8 +397,11 @@ body {
 
 .tooltip__date { color: var(--text-dim); margin-bottom: 4px; }
 
-/* 電腦版 / 手機版 switch, in the header beside the user picker. */
-.layout-toggle { display: inline-flex; margin-right: 10px; }
+/* 電腦版 / 手機版 switch, pinned to the far left of the header. The <h1> is
+ * absolutely centred, so anything sharing the middle of a narrow header ends
+ * up underneath it and unclickable — which is exactly what happened when this
+ * sat next to the user picker on the right. */
+.layout-toggle { display: inline-flex; order: -1; margin-right: auto; }
 .layout-toggle__btn {
   background: var(--panel-bg);
   color: var(--text-dim);
@@ -464,12 +467,61 @@ body {
   min-height: 280px;
 }
 
+/* Narrow enough that the absolutely centred <h1> would still collide with the
+ * switch, so in this layout it joins the flow instead of floating over it. */
+:root[data-layout="mobile"] .app-header h1 {
+  position: static;
+  transform: none;
+  flex: 1;
+  text-align: center;
+  font-size: 18px;
+}
+
+/* Each control sits directly against the figure it drives. layoutMode.js
+ * moves .timeline-section and .sliders-section into .center-panel for this;
+ * these are their positions once they arrive. */
+:root[data-layout="mobile"] .timeline-section { order: 0; }
 :root[data-layout="mobile"] .body-scene-titles__col:nth-child(1) { order: 1; }
 :root[data-layout="mobile"] #body-scene-data { order: 2; }
-:root[data-layout="mobile"] .body-scene-titles__col:nth-child(2) { order: 3; }
-:root[data-layout="mobile"] #body-scene-gallery { order: 4; }
-:root[data-layout="mobile"] #bodytype-explorer { order: 5; }
+:root[data-layout="mobile"] .sliders-section { order: 3; }
+:root[data-layout="mobile"] .body-scene-titles__col:nth-child(2) { order: 4; }
+:root[data-layout="mobile"] #body-scene-gallery { order: 5; }
+:root[data-layout="mobile"] #bodytype-explorer { order: 6; }
 
 /* The left viewport's substats column is empty — it only exists to keep the
  * two columns aligned on desktop. */
 :root[data-layout="mobile"] .body-scene-substats__col:not(#bodytype-explorer) { display: none; }
+
+/* A flex item's automatic minimum is its content's min-content width, and the
+ * three projection checkboxes sit in a nowrap row — together they held the
+ * whole section at 443px inside a 398px frame and scrolled the page sideways.
+ * The rows are allowed to wrap, and the section to shrink past its content. */
+:root[data-layout="mobile"] .sliders-section { min-width: 0; }
+:root[data-layout="mobile"] .projection-toggle-row,
+:root[data-layout="mobile"] .projection-period-row { flex-wrap: wrap; }
+
+/* The stats panel is reading material, and it is tall (measured 855px). As
+ * the first grid item it stood between the reader and the figures; the two
+ * grid items are simply swapped rather than dissolving the grid. */
+:root[data-layout="mobile"] .center-panel { order: 1; }
+:root[data-layout="mobile"] .side-panel--left { order: 2; }
+
+/* Every stat is a label above its value on desktop, which down a single
+ * column turns the panel into a long ladder of half-empty lines. Here the
+ * label and its value(s) share one line and wrap only when they must, which
+ * is roughly a third fewer lines for the same numbers. */
+:root[data-layout="mobile"] .side-panel { font-size: 14px; }
+
+:root[data-layout="mobile"] .stat-row {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  column-gap: 8px;
+  row-gap: 2px;
+  margin-bottom: 6px;
+}
+
+:root[data-layout="mobile"] .stat-row__label {
+  font-size: 14px;
+  min-width: 3.6em;
+}

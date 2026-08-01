@@ -15,9 +15,41 @@ function readPinned() {
   return MODES.includes(stored) ? stored : null;
 }
 
+/** Sections that belong beside the figure they drive once the page is one
+ * column: the timeline picks the dates the left figure shows, the sliders
+ * project it forward. On desktop they are full-width bands above and below
+ * the dashboard, which on a phone puts each of them a screen away from the
+ * thing it changes.
+ *
+ * They are moved in the DOM rather than reordered with `order`, because
+ * `order` only sorts siblings and these start out several containers apart.
+ * Dissolving those containers with `display: contents` does make them
+ * siblings, but it also destroys the containers' own backgrounds, borders and
+ * padding — tried once, and the page fell apart. Relocating the nodes leaves
+ * every wrapper intact. */
+const RELOCATED = ['.timeline-section', '.sliders-section'];
+
+function captureHomes() {
+  return RELOCATED.map((selector) => {
+    const el = document.querySelector(selector);
+    return el ? { el, parent: el.parentNode, next: el.nextSibling } : null;
+  }).filter(Boolean);
+}
+
 export function setupLayoutToggle(container) {
   const root = document.documentElement;
+  const homes = captureHomes();
+  const centerPanel = document.querySelector('.center-panel');
   let pinned = readPinned();
+
+  function placeSections(effective) {
+    for (const { el, parent, next } of homes) {
+      const target = effective === 'mobile' ? centerPanel : parent;
+      if (el.parentNode === target) continue;
+      if (effective === 'mobile') target.appendChild(el);
+      else parent.insertBefore(el, next);
+    }
+  }
 
   const buttons = MODES.map((mode) => {
     const btn = document.createElement('button');
@@ -41,6 +73,7 @@ export function setupLayoutToggle(container) {
   function apply() {
     const effective = pinned ?? (NARROW.matches ? 'mobile' : 'desktop');
     root.dataset.layout = effective;
+    placeSections(effective);
     // Only a *pinned* mobile layout gets the phone-width frame. A real phone
     // is already that wide, and capping it there too would leave a gutter.
     root.dataset.layoutPinned = pinned ? 'true' : 'false';
