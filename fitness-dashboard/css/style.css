@@ -555,3 +555,14 @@ body {
   font-size: 14px;
   min-width: 3.6em;
 }
+
+/* The four personal figures are short enough to pair up, halving the block.
+ * Only this one: a segment row already carries a label plus both a muscle and
+ * a fat reading, and two of those side by side would not fit the column. */
+:root[data-layout="mobile"] #personal-info-body {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  column-gap: 10px;
+  row-gap: 4px;
+}
+:root[data-layout="mobile"] #personal-info-body .stat-row { margin-bottom: 0; }
