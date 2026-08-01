@@ -397,36 +397,26 @@ body {
 
 .tooltip__date { color: var(--text-dim); margin-bottom: 4px; }
 
-/* Phone layout.
+/* Phone layout: the two viewports stack instead of sitting side by side —
+ * at 375px wide they were 212px each, too narrow to read a figure in.
  *
- * Two things drive it. The viewports stack rather than sitting side by side —
- * at 375px wide they were 212px each, too narrow to read a figure in. And
- * every control sits directly against the figure it drives, because on a
- * phone the desktop arrangement puts the timeline a screen above its figure
- * and the diet/training sliders a screen below it, so adjusting either meant
- * scrolling back and forth to see what changed:
+ * `display: contents` dissolves the three wrapper rows so each viewport's
+ * title / canvas / substats can be interleaved into one column via `order`,
+ * keeping every title attached to its own figure. Their children carry
+ * `flex: 1`, which in a column flex container means flex-basis: 0 on the
+ * *height* — that collapses them once they become direct children here, so
+ * each one is reset to `flex: none`.
  *
- *     timeline           -> drives the figure under it
- *     使用者當下狀態 figure
- *     diet/training      -> drives the figure above it
- *     身材參考 figure
- *     body-fat/muscle    -> drives the figure above it
- *     stats, details, chart   (reading material, moved to the end)
- *
- * `order` only sorts siblings, and these elements start out several
- * containers apart, so every wrapper between them and <body> is dissolved
- * with `display: contents` and <body> becomes the flex container. Dissolved
- * children carrying `flex: 1` would take flex-basis: 0 on their *height*
- * here and collapse, so those are reset to `flex: none`.
- *
- * Each .body-scene also needs an explicit height: in a single column nothing
- * above it has a definite height, so the canvas's `height: 100%` resolves to
- * auto — see the note on .body-scene canvas for what that used to cause. */
+ * Each .body-scene also needs an explicit height. In a single column nothing
+ * above it has a definite height, so the canvas's `height: 100%` resolved to
+ * auto, the canvas fell back to its attribute height, and the
+ * ResizeObserver → setSize → taller canvas → observer loop ran away
+ * (measured: 1857px tall). */
 @media (max-width: 720px) {
-  body { display: flex; flex-direction: column; }
+  .dashboard-grid { grid-template-columns: 1fr; }
 
-  .dashboard-grid,
-  .center-panel,
+  .center-panel { position: relative; }
+
   .body-scene-titles,
   .body-scene-row,
   .body-scene-substats { display: contents; }
@@ -436,30 +426,17 @@ body {
 
   .body-scene {
     flex: none;
-    height: 38vh;
-    min-height: 260px;
+    height: 42vh;
+    min-height: 280px;
   }
 
-  .app-header { order: 1; }
-  #app-error { order: 2; }
-  .timeline-section { order: 3; }
-  .body-scene-titles__col:nth-child(1) { order: 4; }
-  #body-scene-data { order: 5; }
-  .sliders-section { order: 6; }
-  .body-scene-titles__col:nth-child(2) { order: 7; }
-  #body-scene-gallery { order: 8; }
-  #bodytype-explorer { order: 9; }
-  .side-panel--left { order: 10; }
-  .detail-section { order: 11; }
-  .chart-section { order: 12; }
+  .body-scene-titles__col:nth-child(1) { order: 1; }
+  #body-scene-data { order: 2; }
+  .body-scene-titles__col:nth-child(2) { order: 3; }
+  #body-scene-gallery { order: 4; }
+  #bodytype-explorer { order: 5; }
 
   /* The left viewport's substats column is empty — it only exists to keep
    * the two columns aligned on desktop. */
   .body-scene-substats__col:not(#bodytype-explorer) { display: none; }
-
-  /* Its containing block was .body-scene-row, which no longer generates a box.
-   * Pinned to the viewport instead, so the wait reads as a loading screen
-   * rather than an overlay anchored to whatever ancestor happens to be
-   * positioned. */
-  .body-scene-loading { position: fixed; }
 }
