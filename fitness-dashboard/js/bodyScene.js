@@ -34,15 +34,15 @@ import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
 // sliders to a measurement's own numbers reproduces that measurement's
 // figure.
 const BODYTYPE_MODELS = {
-  thin: { url: 'assets/models/bodytypes/thin.dae', label: '瘦', musclePct: 85, bodyFatPercent: 10 },
-  normal: { url: 'assets/models/bodytypes/normal.dae', label: '正常', musclePct: 100, bodyFatPercent: 18 },
-  fat: { url: 'assets/models/bodytypes/fat.dae', label: '胖', musclePct: 90, bodyFatPercent: 32 },
+  thin: { url: 'assets/models/bodytypes/thin.dae.xml', label: '瘦', musclePct: 85, bodyFatPercent: 10 },
+  normal: { url: 'assets/models/bodytypes/normal.dae.xml', label: '正常', musclePct: 100, bodyFatPercent: 18 },
+  fat: { url: 'assets/models/bodytypes/fat.dae.xml', label: '胖', musclePct: 90, bodyFatPercent: 32 },
   // 160, not the 200 this once carried: 200 was a nominal "very muscular"
   // figure never tied to the asset, and it made the data viewport render a
   // given muscle rate at 1.65x less buff than the explorer showed for the
   // same number. 160 is the muscle rate at which buff.dae's own sculpted
   // shape is reached, and it matches the explorer slider's full-scale end.
-  buff: { url: 'assets/models/bodytypes/buff.dae', label: '超壯', musclePct: 160, bodyFatPercent: 12 },
+  buff: { url: 'assets/models/bodytypes/buff.dae.xml', label: '超壯', musclePct: 160, bodyFatPercent: 12 },
 };
 const BODYTYPE_ORDER = ['thin', 'normal', 'fat', 'buff'];
 // 'normal' is the base geometry, not a morph target — its own influence is
