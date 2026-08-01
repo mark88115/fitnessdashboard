@@ -28,9 +28,12 @@ let dietPercent = 0;
 let trainingPercent = 0;
 let projectionMonths = 6;
 let trainingYears = DEFAULT_TRAINING_YEARS;
-let showBaseline = true;
+// Only the current figure is drawn on arrival. The baseline and projection
+// are overlays on top of it, and all three at once is a lot to read before
+// you know what any of them mean; each is one checkbox away.
+let showBaseline = false;
 let showCurrent = true;
-let showProjection = true;
+let showProjection = false;
 let selectedBaselineDate = null;
 let selectedCurrentDate = null;
 
