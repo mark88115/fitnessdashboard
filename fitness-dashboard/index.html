@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+  <meta name="robots" content="noindex, nofollow" />
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>健身儀表板</title>
+  <link rel="stylesheet" href="css/style.css" />
+  <script type="importmap">
+  {
+    "imports": {
+      "three": "https://unpkg.com/three@0.169.0/build/three.module.js",
+      "three/addons/": "https://unpkg.com/three@0.169.0/examples/jsm/"
+    }
+  }
+  </script>
+</head>
+<body>
+  <header class="app-header">
+    <h1>健身儀表板</h1>
+    <select id="user-select" class="user-select"></select>
+  </header>
+
+  <p id="app-error" class="app-error" hidden></p>
+
+  <section class="timeline-section">
+    <div id="timeline" class="timeline"></div>
+  </section>
+
+  <main class="dashboard-grid">
+    <aside class="side-panel side-panel--left">
+      <div class="personal-info">
+        <h2 class="personal-info__title">個人基本狀態</h2>
+        <div id="personal-info-body"></div>
+      </div>
+      <div id="panel-left"></div>
+      <div class="reference-wrap">
+        <button id="reference-toggle" class="detail-toggle" aria-expanded="false">▸ 標準參考值</button>
+        <div id="reference-panel" class="detail-panel detail-panel--popover" hidden></div>
+      </div>
+    </aside>
+    <div class="center-panel">
+      <div class="body-scene-titles">
+        <div class="body-scene-titles__col">使用者當下狀態</div>
+        <div class="body-scene-titles__col">身材參考</div>
+      </div>
+      <div class="body-scene-row">
+        <div id="body-scene-data" class="body-scene"></div>
+        <div id="body-scene-gallery" class="body-scene"></div>
+        <p id="body-scene-loading" class="body-scene-loading">載入 3D 模型中…(4 個體型檔案較大,第一次載入可能要幾秒鐘)</p>
+      </div>
+      <div class="body-scene-substats">
+        <div class="body-scene-substats__col"></div>
+        <div id="bodytype-explorer" class="body-scene-substats__col"></div>
+      </div>
+    </div>
+  </main>
+
+  <section class="sliders-section">
+    <div class="projection-toggle-row">
+      <label>
+        <input type="checkbox" id="show-baseline" checked />
+        顯示基準(灰色疊圖)
+      </label>
+      <label>
+        <input type="checkbox" id="show-current" checked />
+        顯示目前(綠色實體)
+      </label>
+      <label>
+        <input type="checkbox" id="show-projection" checked />
+        顯示預估(紫色疊圖)
+      </label>
+    </div>
+    <div class="projection-period-row">
+      <label for="projection-period" class="slider-label">預估期間</label>
+      <select id="projection-period" class="projection-period-select">
+        <option value="1">1 個月</option>
+        <option value="2">2 個月</option>
+        <option value="3">3 個月</option>
+        <option value="6" selected>6 個月</option>
+        <option value="12">12 個月</option>
+      </select>
+      <label for="training-years" class="slider-label">重訓資歷</label>
+      <select id="training-years" class="projection-period-select">
+        <option value="1">第 1 年</option>
+        <option value="2" selected>第 2 年</option>
+        <option value="3">第 3 年</option>
+        <option value="4">第 4 年以上</option>
+      </select>
+    </div>
+    <div id="diet-slider" class="slider-row"></div>
+    <div id="training-slider" class="slider-row"></div>
+    <p id="projected-summary" class="projected-summary"></p>
+    <p class="sliders-disclaimer">
+      ⚠️ 推估僅供參考:資料點越少(目前僅少數幾筆),推估越粗略;這是「照現在節奏推算」的結果,不是醫學或營養學上的精確預測,也不考慮飲食品質等質化因素。
+    </p>
+  </section>
+
+  <section class="detail-section">
+    <button id="detail-toggle" class="detail-toggle" aria-expanded="false">▸ 詳細數據</button>
+    <div id="detail-panel" class="detail-panel" hidden></div>
+  </section>
+
+  <section class="chart-section">
+    <div id="trend-chart" class="trend-chart"></div>
+  </section>
+
+  <script type="module" src="js/main.js"></script>
+</body>
+</html>
