@@ -1,0 +1,98 @@
+{
+  "user": "博駿",
+  "height_cm": 183,
+  "sex": "male",
+  "age": 27,
+  "measurements": [
+    {
+      "date": "2025-08-28",
+      "time": "17:50",
+      "weight_kg": 83.3,
+      "smm_kg": 37.4,
+      "pbf_percent": 21.2,
+      "bmi": 24.9,
+      "inbody_score": 77,
+      "visceral_fat_level": 8,
+      "waist_hip_ratio": 0.98,
+      "bmr_kcal": 1788,
+      "recommended_kcal": 2981,
+      "segments": {
+        "left_arm": {
+          "muscle_kg": 3.95,
+          "muscle_pct": 108.8,
+          "fat_kg": 0.9,
+          "fat_pct": 135.5
+        },
+        "right_arm": {
+          "muscle_kg": 4.06,
+          "muscle_pct": 111.9,
+          "fat_kg": 0.8,
+          "fat_pct": 127.3
+        },
+        "trunk": {
+          "muscle_kg": 30.5,
+          "muscle_pct": 105.4,
+          "fat_kg": 10.0,
+          "fat_pct": 213.8
+        },
+        "left_leg": {
+          "muscle_kg": 10.13,
+          "muscle_pct": 100.4,
+          "fat_kg": 2.3,
+          "fat_pct": 123.1
+        },
+        "right_leg": {
+          "muscle_kg": 10.18,
+          "muscle_pct": 101.0,
+          "fat_kg": 2.4,
+          "fat_pct": 124.1
+        }
+      }
+    },
+    {
+      "date": "2026-07-29",
+      "time": "16:32",
+      "weight_kg": 85.4,
+      "smm_kg": 36.8,
+      "pbf_percent": 24.4,
+      "bmi": 25.5,
+      "inbody_score": 73,
+      "visceral_fat_level": 9,
+      "waist_hip_ratio": 1.01,
+      "bmr_kcal": 1765,
+      "recommended_kcal": 2509,
+      "segments": {
+        "left_arm": {
+          "muscle_kg": 3.88,
+          "muscle_pct": 106.1,
+          "fat_kg": 1.2,
+          "fat_pct": 176.5
+        },
+        "right_arm": {
+          "muscle_kg": 3.94,
+          "muscle_pct": 107.7,
+          "fat_kg": 1.1,
+          "fat_pct": 171.8
+        },
+        "trunk": {
+          "muscle_kg": 30.2,
+          "muscle_pct": 103.4,
+          "fat_kg": 11.8,
+          "fat_pct": 253.6
+        },
+        "left_leg": {
+          "muscle_kg": 10.03,
+          "muscle_pct": 98.7,
+          "fat_kg": 2.7,
+          "fat_pct": 141.7
+        },
+        "right_leg": {
+          "muscle_kg": 10.1,
+          "muscle_pct": 99.4,
+          "fat_kg": 2.7,
+          "fat_pct": 142.9
+        }
+      }
+    }
+  ]
+}
