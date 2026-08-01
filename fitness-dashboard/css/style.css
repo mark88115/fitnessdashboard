@@ -469,14 +469,21 @@ body {
   min-height: 280px;
 }
 
-/* Narrow enough that the absolutely centred <h1> would still collide with the
- * switch, so in this layout it joins the flow instead of floating over it. */
+/* The header is too narrow to hold the switch, the title and the user picker
+ * on one line — squeezed between the two controls the title had nowhere to
+ * go. It drops to a row of its own, centred, with the controls above it. */
+:root[data-layout="mobile"] .app-header {
+  flex-wrap: wrap;
+  row-gap: 8px;
+}
+
 :root[data-layout="mobile"] .app-header h1 {
   position: static;
   transform: none;
-  flex: 1;
+  order: 2;
+  flex: 0 0 100%;
   text-align: center;
-  font-size: 18px;
+  font-size: 20px;
 }
 
 /* Each control sits directly against the figure it drives. layoutMode.js
