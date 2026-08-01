@@ -29,5 +29,6 @@ export function renderStatsPanel(container, measurement) {
     statRow(SEGMENT_LABELS.left_leg, measurement.segments.left_leg) +
     statRow(SEGMENT_LABELS.right_leg, measurement.segments.right_leg) +
     `<div class="stat-row"><div class="stat-row__label">體脂率</div><div class="stat-row__value">${fmt(measurement.pbfPercent, '%')}</div></div>` +
+    `<div class="stat-row"><div class="stat-row__label">骨骼肌重</div><div class="stat-row__value">${fmt(measurement.smmKg, 'kg')}</div></div>` +
     `<div class="stat-row"><div class="stat-row__label">InBody 評分</div><div class="stat-row__value">${fmt(measurement.inbodyScore, '')}</div></div>`;
 }
