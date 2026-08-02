@@ -1,0 +1,53 @@
+{
+  "user": "bo yu",
+  "height_cm": 175,
+  "sex": "male",
+  "age": 32,
+  "measurements": [
+    {
+      "date": "2026-07-26",
+      "time": "10:38",
+      "weight_kg": 74.4,
+      "smm_kg": 34.3,
+      "pbf_percent": 19.0,
+      "bmi": 24.3,
+      "inbody_score": 79,
+      "visceral_fat_level": 6,
+      "waist_hip_ratio": 0.93,
+      "bmr_kcal": 1671,
+      "recommended_kcal": 2719,
+      "segments": {
+        "left_arm": {
+          "muscle_kg": 3.62,
+          "muscle_pct": 109.8,
+          "fat_kg": 0.6,
+          "fat_pct": 103.2
+        },
+        "right_arm": {
+          "muscle_kg": 3.6,
+          "muscle_pct": 109.1,
+          "fat_kg": 0.6,
+          "fat_pct": 105.6
+        },
+        "trunk": {
+          "muscle_kg": 28.0,
+          "muscle_pct": 106.7,
+          "fat_kg": 7.7,
+          "fat_pct": 181.6
+        },
+        "left_leg": {
+          "muscle_kg": 8.95,
+          "muscle_pct": 97.7,
+          "fat_kg": 2.0,
+          "fat_pct": 113.2
+        },
+        "right_leg": {
+          "muscle_kg": 9.15,
+          "muscle_pct": 99.9,
+          "fat_kg": 2.0,
+          "fat_pct": 114.9
+        }
+      }
+    }
+  ]
+}
