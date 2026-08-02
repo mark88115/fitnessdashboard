@@ -5,6 +5,51 @@
   "age": 32,
   "measurements": [
     {
+      "date": "2026-05-24",
+      "time": "10:11",
+      "weight_kg": 77.4,
+      "smm_kg": 34.9,
+      "pbf_percent": 20.9,
+      "bmi": 25.0,
+      "inbody_score": 78,
+      "visceral_fat_level": 7,
+      "waist_hip_ratio": 0.95,
+      "bmr_kcal": 1692,
+      "recommended_kcal": 2778,
+      "segments": {
+        "left_arm": {
+          "muscle_kg": 3.76,
+          "muscle_pct": 111.9,
+          "fat_kg": 0.8,
+          "fat_pct": 123.7
+        },
+        "right_arm": {
+          "muscle_kg": 3.73,
+          "muscle_pct": 110.9,
+          "fat_kg": 0.8,
+          "fat_pct": 125.0
+        },
+        "trunk": {
+          "muscle_kg": 28.8,
+          "muscle_pct": 107.6,
+          "fat_kg": 9.0,
+          "fat_pct": 209.7
+        },
+        "left_leg": {
+          "muscle_kg": 9.14,
+          "muscle_pct": 97.8,
+          "fat_kg": 2.2,
+          "fat_pct": 124.3
+        },
+        "right_leg": {
+          "muscle_kg": 9.34,
+          "muscle_pct": 100.0,
+          "fat_kg": 2.2,
+          "fat_pct": 126.0
+        }
+      }
+    },
+    {
       "date": "2026-07-26",
       "time": "10:38",
       "weight_kg": 74.4,
