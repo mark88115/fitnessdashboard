@@ -64,7 +64,7 @@ function numberOrNull(v) {
 
 /** Fetches and parses a user's data.json. Browser-only (uses fetch). */
 export async function loadUserData(username) {
-  const res = await fetch(`../workout/${encodeURIComponent(username)}/data.json`);
+  const res = await fetch(`../workout/${encodeURIComponent(username)}/data.json?v=msblmu9p`);
   if (!res.ok) {
     throw new Error(`loadUserData: failed to fetch data for "${username}" (${res.status})`);
   }
@@ -74,7 +74,7 @@ export async function loadUserData(username) {
 
 /** Fetches the list of available usernames from workout/users.json. Browser-only. */
 export async function loadUserList() {
-  const res = await fetch('../workout/users.json');
+  const res = await fetch('../workout/users.json?v=msblmu9p');
   if (!res.ok) {
     throw new Error(`loadUserList: failed to fetch user list (${res.status})`);
   }

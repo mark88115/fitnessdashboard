@@ -228,6 +228,51 @@
           "fat_pct": 85.9
         }
       }
+    },
+    {
+      "date": "2026-08-01",
+      "time": "15:53",
+      "weight_kg": 76.6,
+      "smm_kg": 38.5,
+      "pbf_percent": 12.6,
+      "bmi": 23.4,
+      "inbody_score": 86,
+      "visceral_fat_level": 3,
+      "waist_hip_ratio": 0.82,
+      "bmr_kcal": 1816,
+      "recommended_kcal": 2784,
+      "segments": {
+        "left_arm": {
+          "muscle_kg": 3.81,
+          "muscle_pct": 109.3,
+          "fat_kg": 0.3,
+          "fat_pct": 51.7
+        },
+        "right_arm": {
+          "muscle_kg": 3.92,
+          "muscle_pct": 112.4,
+          "fat_kg": 0.3,
+          "fat_pct": 44.4
+        },
+        "trunk": {
+          "muscle_kg": 29.7,
+          "muscle_pct": 106.7,
+          "fat_kg": 4.8,
+          "fat_pct": 105.4
+        },
+        "left_leg": {
+          "muscle_kg": 10.7,
+          "muscle_pct": 110.3,
+          "fat_kg": 1.5,
+          "fat_pct": 82.7
+        },
+        "right_leg": {
+          "muscle_kg": 10.76,
+          "muscle_pct": 111.0,
+          "fat_kg": 1.5,
+          "fat_pct": 83.4
+        }
+      }
     }
   ]
 }
