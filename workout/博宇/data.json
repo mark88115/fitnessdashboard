@@ -1,5 +1,5 @@
 {
-  "user": "bo yu",
+  "user": "博宇",
   "height_cm": 175,
   "sex": "male",
   "age": 32,
@@ -10,7 +10,7 @@
       "weight_kg": 77.4,
       "smm_kg": 34.9,
       "pbf_percent": 20.9,
-      "bmi": 25.0,
+      "bmi": 25,
       "inbody_score": 78,
       "visceral_fat_level": 7,
       "waist_hip_ratio": 0.95,
@@ -27,12 +27,12 @@
           "muscle_kg": 3.73,
           "muscle_pct": 110.9,
           "fat_kg": 0.8,
-          "fat_pct": 125.0
+          "fat_pct": 125
         },
         "trunk": {
           "muscle_kg": 28.8,
           "muscle_pct": 107.6,
-          "fat_kg": 9.0,
+          "fat_kg": 9,
           "fat_pct": 209.7
         },
         "left_leg": {
@@ -43,9 +43,9 @@
         },
         "right_leg": {
           "muscle_kg": 9.34,
-          "muscle_pct": 100.0,
+          "muscle_pct": 100,
           "fat_kg": 2.2,
-          "fat_pct": 126.0
+          "fat_pct": 126
         }
       }
     },
@@ -54,7 +54,7 @@
       "time": "10:38",
       "weight_kg": 74.4,
       "smm_kg": 34.3,
-      "pbf_percent": 19.0,
+      "pbf_percent": 19,
       "bmi": 24.3,
       "inbody_score": 79,
       "visceral_fat_level": 6,
@@ -75,7 +75,7 @@
           "fat_pct": 105.6
         },
         "trunk": {
-          "muscle_kg": 28.0,
+          "muscle_kg": 28,
           "muscle_pct": 106.7,
           "fat_kg": 7.7,
           "fat_pct": 181.6
@@ -83,13 +83,13 @@
         "left_leg": {
           "muscle_kg": 8.95,
           "muscle_pct": 97.7,
-          "fat_kg": 2.0,
+          "fat_kg": 2,
           "fat_pct": 113.2
         },
         "right_leg": {
           "muscle_kg": 9.15,
           "muscle_pct": 99.9,
-          "fat_kg": 2.0,
+          "fat_kg": 2,
           "fat_pct": 114.9
         }
       }
