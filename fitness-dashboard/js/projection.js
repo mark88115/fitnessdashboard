@@ -1,5 +1,5 @@
 // fitness-dashboard/js/projection.js
-import { SEGMENT_KEYS } from './dataStore.js?v=mslep841';
+import { SEGMENT_KEYS } from './dataStore.js?v=msu0y5qw';
 
 const MS_PER_WEEK = 7 * 24 * 60 * 60 * 1000;
 
