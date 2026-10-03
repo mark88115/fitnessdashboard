@@ -1,0 +1,149 @@
+<!doctype html>
+<html lang="zh-Hant">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>家具合成</title>
+<style>
+:root{--bg:#f4f1ec;--panel:#fffdf9;--ink:#2b2823;--sub:#7a746a;--line:#e3ddd3;--accent:#b5703a}
+@media (prefers-color-scheme:dark){:root{--bg:#1d1b18;--panel:#272420;--ink:#efe9df;--sub:#a29a8d;--line:#3a352e;--accent:#e0955a}}
+*{box-sizing:border-box}
+html,body{margin:0;height:100%;background:var(--bg);color:var(--ink);font:14px/1.5 -apple-system,"Noto Sans TC","PingFang TC",sans-serif}
+#app{display:flex;height:100%}
+#stage{flex:1;min-width:0;display:flex;align-items:center;justify-content:center;padding:12px;overflow:hidden}
+canvas{max-width:100%;max-height:100%;background:var(--panel);border:1px solid var(--line);touch-action:none}
+#side{width:290px;overflow:auto;background:var(--panel);border-left:1px solid var(--line);padding:16px}
+h1{font-size:18px;margin:0 0 2px}.sub{color:var(--sub);font-size:12px;margin-bottom:12px}
+h2{font-size:12px;letter-spacing:.08em;color:var(--sub);margin:16px 0 8px}
+button,label.btn{display:inline-block;font:inherit;color:var(--ink);background:transparent;border:1px solid var(--line);border-radius:8px;padding:6px 10px;cursor:pointer;margin:0 6px 6px 0}
+button:hover,label.btn:hover{border-color:var(--accent)}
+button.pri{background:var(--accent);border-color:var(--accent);color:#fff}
+input[type=file]{display:none}input[type=range]{width:100%}
+.row{margin:8px 0}.row span{display:flex;justify-content:space-between;color:var(--sub);font-size:12px}
+#list div{padding:5px 8px;border-radius:8px;cursor:pointer}#list .sel{background:color-mix(in srgb,var(--accent) 18%,transparent)}
+@media (max-width:760px){#app{flex-direction:column}#side{width:100%;height:46%;border-left:0;border-top:1px solid var(--line)}}
+</style>
+</head>
+<body>
+<div id="app">
+  <div id="stage"><canvas id="cv" width="960" height="540"></canvas></div>
+  <aside id="side">
+    <h1>家具合成</h1>
+    <div class="sub">圖片只在你的瀏覽器中處理，不會上傳</div>
+    <label class="btn pri">① 選房間照片<input type="file" id="room" accept="image/*"></label>
+    <label class="btn">② 加入家具圖<input type="file" id="furn" accept="image/*" multiple></label>
+
+    <h2>已加入（點選編輯，可拖曳）</h2>
+    <div id="list"></div>
+
+    <div id="ctl" hidden>
+      <h2>選取的家具</h2>
+      <div class="row"><span>去背容差（白底／純色底）<b id="tv">0</b></span><input type="range" id="tol" min="0" max="120" value="0"></div>
+      <div class="row"><span>大小<b></b></span><input type="range" id="scale" min="5" max="300" value="100"></div>
+      <div class="row"><span>旋轉<b id="rv">0°</b></span><input type="range" id="rot" min="-180" max="180" value="0"></div>
+      <div class="row"><span>透明度<b></b></span><input type="range" id="alpha" min="20" max="100" value="100"></div>
+      <div class="row"><span>陰影<b></b></span><input type="range" id="shadow" min="0" max="100" value="35"></div>
+      <button id="flip">左右翻轉</button><button id="up">上移一層</button><button id="del">刪除</button>
+    </div>
+    <h2>輸出</h2>
+    <button class="pri" id="save">下載合成圖</button>
+  </aside>
+</div>
+<script>
+const cv = document.getElementById('cv'), ctx = cv.getContext('2d');
+let room = null, items = [], sel = null;
+const $ = id => document.getElementById(id);
+
+const loadImg = file => new Promise(r=>{ const i=new Image(); i.onload=()=>r(i); i.src=URL.createObjectURL(file); });
+
+$('room').onchange = async e=>{
+  if(!e.target.files[0]) return; room = await loadImg(e.target.files[0]);
+  const s = Math.min(1, 1600/Math.max(room.width,room.height));
+  cv.width = Math.round(room.width*s); cv.height = Math.round(room.height*s); draw();
+};
+$('furn').onchange = async e=>{
+  for(const f of e.target.files){
+    const img = await loadImg(f);
+    const it = {img, src:null, tol:0, x:cv.width/2, y:cv.height*.6, w:0,h:0, k:1, rot:0, flip:false, alpha:1, shadow:.35, name:f.name};
+    const base = Math.min(cv.width,cv.height)*.4/Math.max(img.width,img.height);
+    it.w = img.width*base; it.h = img.height*base; it.cut = img; items.push(it); select(it);
+  }
+  e.target.value=''; refreshList(); draw();
+};
+
+// 去背：從四個角落開始填色，把接近底色的像素變透明
+function cutout(it){
+  if(it.tol===0){ it.cut = it.img; return; }
+  const c = document.createElement('canvas'); c.width = it.img.width; c.height = it.img.height;
+  const x = c.getContext('2d',{willReadFrequently:true}); x.drawImage(it.img,0,0);
+  const d = x.getImageData(0,0,c.width,c.height), p = d.data, W=c.width, H=c.height;
+  const seen = new Uint8Array(W*H), tol = it.tol*it.tol*3;
+  const bg = [[0,0],[W-1,0],[0,H-1],[W-1,H-1]].map(([a,b])=>{const i=(b*W+a)*4;return [p[i],p[i+1],p[i+2]]});
+  const near = (i)=>bg.some(g=>{const dr=p[i]-g[0],dg=p[i+1]-g[1],db=p[i+2]-g[2];return dr*dr+dg*dg+db*db<=tol});
+  const st = [[0,0],[W-1,0],[0,H-1],[W-1,H-1]];
+  while(st.length){
+    const [a,b] = st.pop(); if(a<0||b<0||a>=W||b>=H) continue;
+    const k=b*W+a; if(seen[k]) continue; seen[k]=1;
+    if(!near(k*4)) continue; p[k*4+3]=0;
+    st.push([a+1,b],[a-1,b],[a,b+1],[a,b-1]);
+  }
+  x.putImageData(d,0,0); it.cut = c;
+}
+
+function xform(it){ ctx.translate(it.x,it.y); ctx.rotate(it.rot*Math.PI/180); ctx.scale(it.flip?-it.k:it.k, it.k); }
+function draw(outline=true){
+  ctx.clearRect(0,0,cv.width,cv.height);
+  if(room) ctx.drawImage(room,0,0,cv.width,cv.height);
+  else { ctx.fillStyle='#8883'; ctx.font='20px sans-serif'; ctx.textAlign='center'; ctx.fillText('請先選房間照片',cv.width/2,cv.height/2); }
+  for(const it of items){
+    ctx.save(); xform(it); ctx.globalAlpha = it.alpha;
+    if(it.shadow>0){ ctx.shadowColor=`rgba(0,0,0,${it.shadow})`; ctx.shadowBlur=24; ctx.shadowOffsetY=12; }
+    ctx.drawImage(it.cut,-it.w/2,-it.h/2,it.w,it.h); ctx.restore();
+    if(outline && it===sel){
+      ctx.save(); xform(it); ctx.strokeStyle='#b5703a'; ctx.setLineDash([6,4]); ctx.lineWidth=2/it.k;
+      ctx.strokeRect(-it.w/2,-it.h/2,it.w,it.h); ctx.setLineDash([]); ctx.fillStyle='#b5703a';
+      const r=9/it.k; ctx.fillRect(it.w/2-r,it.h/2-r,2*r,2*r); ctx.restore();
+    }
+  }
+}
+function select(it){
+  sel = it; $('ctl').hidden = !it; if(!it) return;
+  $('tol').value = it.tol; $('tv').textContent = it.tol; $('scale').value = it.k*100;
+  $('rot').value = it.rot; $('rv').textContent = it.rot+'°'; $('alpha').value = it.alpha*100; $('shadow').value = it.shadow*100;
+  refreshList();
+}
+function refreshList(){
+  const l = $('list'); l.innerHTML='';
+  items.forEach((it,i)=>{ const d=document.createElement('div'); d.textContent=(i+1)+'. '+it.name; if(it===sel) d.className='sel'; d.onclick=()=>{select(it);draw();}; l.appendChild(d); });
+}
+$('tol').oninput = e=>{ sel.tol=+e.target.value; $('tv').textContent=sel.tol; cutout(sel); draw(); };
+$('scale').oninput = e=>{ sel.k=e.target.value/100; draw(); };
+$('rot').oninput = e=>{ sel.rot=+e.target.value; $('rv').textContent=sel.rot+'°'; draw(); };
+$('alpha').oninput = e=>{ sel.alpha=e.target.value/100; draw(); };
+$('shadow').oninput = e=>{ sel.shadow=e.target.value/100; draw(); };
+$('flip').onclick = ()=>{ sel.flip=!sel.flip; draw(); };
+$('up').onclick = ()=>{ const i=items.indexOf(sel); if(i<items.length-1){ [items[i],items[i+1]]=[items[i+1],items[i]]; refreshList(); draw(); } };
+$('del').onclick = ()=>{ items=items.filter(x=>x!==sel); select(null); refreshList(); draw(); };
+$('save').onclick = ()=>{ draw(false); const a=document.createElement('a'); a.download='composite.png'; a.href=cv.toDataURL('image/png'); a.click(); draw(); };
+
+// 拖曳 / 右下角縮放
+function pt(e){ const r=cv.getBoundingClientRect(); return [(e.clientX-r.left)*cv.width/r.width,(e.clientY-r.top)*cv.height/r.height]; }
+function local(it,[px,py]){ let dx=px-it.x, dy=py-it.y, a=-it.rot*Math.PI/180;
+  let x=dx*Math.cos(a)-dy*Math.sin(a), y=dx*Math.sin(a)+dy*Math.cos(a); if(it.flip) x=-x; return [x/it.k,y/it.k]; }
+let drag=null;
+cv.onpointerdown = e=>{
+  const p = pt(e);
+  if(sel){ const [lx,ly]=local(sel,p), r=14/sel.k; if(Math.abs(lx-sel.w/2)<r&&Math.abs(ly-sel.h/2)<r){ drag={mode:'s',d0:Math.hypot(p[0]-sel.x,p[1]-sel.y),k0:sel.k}; cv.setPointerCapture(e.pointerId); return; } }
+  for(let i=items.length-1;i>=0;i--){ const it=items[i], [lx,ly]=local(it,p);
+    if(Math.abs(lx)<=it.w/2&&Math.abs(ly)<=it.h/2){ select(it); drag={mode:'m',ox:it.x-p[0],oy:it.y-p[1]}; cv.setPointerCapture(e.pointerId); draw(); return; } }
+  select(null); refreshList(); draw();
+};
+cv.onpointermove = e=>{ if(!drag) return; const p=pt(e);
+  if(drag.mode==='m'){ sel.x=p[0]+drag.ox; sel.y=p[1]+drag.oy; }
+  else { sel.k=Math.max(.05,Math.min(3,drag.k0*Math.hypot(p[0]-sel.x,p[1]-sel.y)/drag.d0)); $('scale').value=sel.k*100; }
+  draw(); };
+cv.onpointerup = cv.onpointercancel = ()=>drag=null;
+draw();
+</script>
+</body>
+</html>
