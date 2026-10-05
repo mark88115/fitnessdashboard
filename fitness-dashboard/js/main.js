@@ -1,16 +1,16 @@
 // fitness-dashboard/js/main.js
-import { loadUserData } from './dataStore.js?v=mumi923m';
-import { computeSegmentTrends, projectMeasurement, DEFAULT_TRAINING_YEARS } from './projection.js?v=mumi923m';
-import { BodyScene } from './bodyScene.js?v=mumi923m';
-import { createTimeline } from './timeline.js?v=mumi923m';
-import { createAdjustSlider } from './sliders.js?v=mumi923m';
-import { setupBodytypeExplorer, muscleRateFromSmm } from './bodytypeExplorer.js?v=mumi923m';
-import { renderStatsPanel } from './statsPanel.js?v=mumi923m';
-import { setupDetailPanel } from './detailPanel.js?v=mumi923m';
-import { setupReferencePanel } from './referencePanel.js?v=mumi923m';
-import { renderTrendChart } from './trendChart.js?v=mumi923m';
-import { setupUserSelect } from './userSelect.js?v=mumi923m';
-import { setupLayoutToggle } from './layoutMode.js?v=mumi923m';
+import { loadUserData } from './dataStore.js?v=muumhymv';
+import { computeSegmentTrends, projectMeasurement, DEFAULT_TRAINING_YEARS } from './projection.js?v=muumhymv';
+import { BodyScene } from './bodyScene.js?v=muumhymv';
+import { createTimeline } from './timeline.js?v=muumhymv';
+import { createAdjustSlider } from './sliders.js?v=muumhymv';
+import { setupBodytypeExplorer, muscleRateFromSmm } from './bodytypeExplorer.js?v=muumhymv';
+import { renderStatsPanel } from './statsPanel.js?v=muumhymv';
+import { setupDetailPanel } from './detailPanel.js?v=muumhymv';
+import { setupReferencePanel } from './referencePanel.js?v=muumhymv';
+import { renderTrendChart } from './trendChart.js?v=muumhymv';
+import { setupUserSelect } from './userSelect.js?v=muumhymv';
+import { setupLayoutToggle } from './layoutMode.js?v=muumhymv';
 
 const el = (id) => document.getElementById(id);
 
